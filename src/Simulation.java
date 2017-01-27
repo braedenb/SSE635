@@ -42,6 +42,21 @@ public class Simulation
 		population = children;
 		
 		System.out.println(population.size());
+		
+		// Add enough Plants to have 20 total Plants in population.
+		populate();
+		
+		System.out.println(population.size() + "\n");
+		
+		// Mutate all the Plants in population.
+		for(int i=0; i<population.size(); i++)
+		{
+			System.out.println("Before mutation:");
+			System.out.print(population.get(i).toString());
+			System.out.println("After mutation:");
+			population.get(i).mutate(minTemp, maxTemp, minPrec, maxPrec);
+			System.out.println(population.get(i).toString());
+		}
 	}
 	
 	// Accept user input to set the ideal temperature and precipitation.

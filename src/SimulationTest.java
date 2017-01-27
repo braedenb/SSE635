@@ -38,5 +38,16 @@ public class SimulationTest
 		Simulation.population = children;
 		
 		assertTrue(Simulation.population.size() <= 20);
+		
+		Simulation.populate();
+		
+		assertTrue(Simulation.population.size() == 20);
+		
+		for(int i=0; i<Simulation.population.size(); i++)
+		{
+			Simulation.population.get(i).mutate(Simulation.minTemp, Simulation.maxTemp, Simulation.minPrec, Simulation.maxPrec);
+		}
+		
+		assertTrue(Simulation.population.size() == 20);
 	}
 }

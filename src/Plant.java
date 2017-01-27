@@ -10,7 +10,7 @@ public class Plant
 		precipitation = precipitationParameter;
 		calcFitness();
 	}
-	void mutate()
+	void mutate( double minTemp, double maxTemp, double minPrecip, double maxPrecip)
 	{
 		calcFitness();
 		if(willMutate())
@@ -20,6 +20,10 @@ public class Plant
 				temp += tempMutation;
 			else
 				temp -= tempMutation;
+			if(temp < minTemp)
+				temp += 2*tempMutation;
+			if(temp > maxTemp)
+				temp -= 2*tempMutation;
 			
 			
 			double tempPrecipitation = 4*Math.random();
@@ -27,6 +31,10 @@ public class Plant
 				precipitation += tempPrecipitation;
 			else
 				precipitation -= tempPrecipitation;
+			if(precipitation < minPrecip)
+				precipitation += 2*tempPrecipitation;
+			if(precipitation > maxPrecip)
+				precipitation -= 2*tempPrecipitation;
 		}
 	}
 	double getTemp()

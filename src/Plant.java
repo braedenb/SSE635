@@ -9,6 +9,7 @@ public class Plant
 		temp = tempParameter;
 		precipitation = precipitationParameter;
 		calcFitness();
+		calcMutation();
 	}
 	void mutate( double minTemp, double maxTemp, double minPrecip, double maxPrecip)
 	{
@@ -36,6 +37,8 @@ public class Plant
 			if(precipitation > maxPrecip)
 				precipitation -= 2*tempPrecipitation;
 		}
+		calcFitness();
+		calcMutation();
 	}
 	double getTemp()
 	{
@@ -54,13 +57,18 @@ public class Plant
 	{
 		return mutation;
 	}
+	void calcMutation()
+	{
+		calcFitness();
+		mutation = 1-fitness;
+	}
 	void calcFitness()
 	{
 		fitness = 1 - (((Math.abs(temp - tempDifference)/25) + Math.abs((precipitation - precipDifference)/50))/2);
 	}
 	boolean willMutate()
 	{
-		return fitness < .95;
+		return fitness < .9;
 	}
 	public String toString()
 	{

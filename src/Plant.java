@@ -10,6 +10,25 @@ public class Plant
 		precipitation = precipitationParameter;
 		calcFitness();
 	}
+	void mutate()
+	{
+		calcFitness();
+		if(willMutate())
+		{
+			double tempMutation = 2*Math.random();
+			if(Math.random() %2 < .5)
+				temp += tempMutation;
+			else
+				temp -= tempMutation;
+			
+			
+			double tempPrecipitation = 4*Math.random();
+			if(Math.random()%2 > .5)
+				precipitation += tempPrecipitation;
+			else
+				precipitation -= tempPrecipitation;
+		}
+	}
 	double getTemp()
 	{
 		return temp;

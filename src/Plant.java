@@ -2,7 +2,7 @@
 public class Plant 
 {
 	double temp=0, precipitation=0, 
-			fitness=0, mutation=0,
+			fitness=0,
 			tempDifference = 15, precipDifference = 50;
 	Plant(double tempParameter, double precipitationParameter)
 	{
@@ -53,14 +53,9 @@ public class Plant
 	{
 		return fitness;
 	}
-	double getMutation()
-	{
-		return mutation;
-	}
 	void calcMutation()
 	{
 		calcFitness();
-		mutation = 1-fitness;
 	}
 	void calcFitness()
 	{
@@ -72,6 +67,6 @@ public class Plant
 	}
 	public String toString()
 	{
-		return temp+"\t"+precipitation+"\t"+fitness+"\t"+mutation+"\n";
+		return temp+"\t"+precipitation+"\t"+fitness+"\n";
 	}
 }

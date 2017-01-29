@@ -49,5 +49,9 @@ public class SimulationTest
 		}
 		
 		assertTrue(Simulation.population.size() == 20);
+		
+		boolean accept = Simulation.idealPopulation();
+		
+		assertTrue(accept == false);
 	}
 }

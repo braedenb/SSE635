@@ -25,48 +25,86 @@ public class Simulation
 		// Add 20 Plants to population.
 		populate();
 		
-		// Select all plants that lie within the ideal ranges for both temperature and precipitation.
-		population = selectBestFit();
+		boolean accept = false;
+		int k = 0;
 		
-		System.out.println(population.size());
-		
-		// Create children by pairing the remaining Plants from population.
-		ArrayList<Plant> children = crossPollinate();
-		
-		System.out.println(children.size());
-		
-		// Carry over as many parents as possible from population.
-		carryOver(children);
-		
-		// population should now become children.
-		population = children;
-		
-		System.out.println(population.size());
-		
-		// Add enough Plants to have 20 total Plants in population.
-		populate();
-		
-		System.out.println(population.size() + "\n");
-		
-		// Mutate all the Plants in population.
-		for(int i=0; i<population.size(); i++)
+		while(!accept)
 		{
-			System.out.println("Before mutation:");
-			System.out.print(population.get(i).toString());
-			System.out.println("After mutation:");
-			population.get(i).mutate(minTemp, maxTemp, minPrec, maxPrec);
-			System.out.println(population.get(i).toString());
+			k++;
+			System.out.println("pass # " + k);
+			System.out.println("minTemp: " + minTemp);
+			System.out.println("maxTemp: " + maxTemp);
+			System.out.println("minPrec: " + minPrec);
+			System.out.println("maxPrec: " + maxPrec);
+			
+			// Select all plants that lie within the ideal ranges for both temperature and precipitation.
+			population = selectBestFit();
+			
+			System.out.println("ideal plants: " + population.size());
+			
+			// Create children by pairing the remaining Plants from population.
+			ArrayList<Plant> children = crossPollinate();
+			
+			System.out.println("children: " + children.size());
+			
+			// Carry over as many parents as possible from population.
+			carryOver(children);
+			
+			// population should now become children.
+			population = children;
+			
+			System.out.println("parents + children: " + population.size());
+			
+			// Add enough Plants to have 20 total Plants in population.
+			populate();
+			
+			System.out.println("new population size: " + population.size() + "\n");
+			
+			// Mutate all the Plants in population.
+			for(int i=0; i<population.size(); i++)
+			{
+				System.out.println("Before mutation:");
+				System.out.print(population.get(i).toString());
+				System.out.println("After mutation:");
+				population.get(i).mutate(minTemp, maxTemp, minPrec, maxPrec);
+				System.out.println(population.get(i).toString());
+			}
+			
+			// Return a boolean indicating whether the population is ideal.
+			accept = idealPopulation();
+			
+			System.out.println("acceptable population: " + accept);
+			
+			if(accept)
+			{
+				// Shorten the acceptable range for the population.
+				updateRange();
+				
+				// If the range is not too short, set accept to false.
+				if((idealTemp - minTemp > 5.0) ||
+					(maxTemp - idealTemp > 5.0) ||
+					(idealPrec - minPrec > 10.0) ||
+					(maxPrec - idealPrec > 10.0))
+				{
+					accept = false;
+				}
+			}
+			
+			System.out.println("updated population acceptance: " + accept + "\n\n");
 		}
+		
+		System.out.println("Ideal population produced in " + k + " passes.");
 	}
 	
 	// Accept user input to set the ideal temperature and precipitation.
 	public static void setConditions()
 	{
 		Scanner in = new Scanner(System.in);
-		System.out.println("Enter ideal temperature: ");
+		System.out.print("Enter ideal temperature: ");
 		idealTemp = in.nextDouble();
-		System.out.println("Enter ideal precipitation: ");
+		System.out.print("Enter ideal precipitation: ");
 		idealPrec = in.nextDouble();
+		System.out.println();
 	}
 	
 	// Set the initial acceptable range to be the 25th to 75th percentile.
@@ -85,8 +123,8 @@ public class Simulation
 		
 		if(idealPrec <= 50.0)
 		{
-			minPrec = 0.0 + (idealPrec + 0.0) / 2.0;
-			maxPrec = idealPrec + (idealPrec + 0.0) / 2.0;
+			minPrec = idealPrec / 2.0;
+			maxPrec = idealPrec + idealPrec / 2.0;
 		}
 		else
 		{
@@ -101,7 +139,7 @@ public class Simulation
 		while(population.size() < 20)
 		{
 			double temp = -10 + 50 * Math.random();
-			double prec = 0 + 100 * Math.random();
+			double prec = 100 * Math.random();
 			Plant plant = new Plant(temp, prec);
 			population.add(plant);
 		}
@@ -153,5 +191,31 @@ public class Simulation
 			children.add(population.get(0));
 			population.remove(0);
 		}
+	}
+	
+	// Return a boolean indicating whether the population is ideal.
+	public static boolean idealPopulation()
+	{		
+		for(int i=0; i<population.size(); i++)
+		{
+			if(population.get(i).getTemp() < minTemp ||
+				population.get(i).getTemp() > maxTemp ||
+				population.get(i).getPrecipitation() < minPrec ||
+				population.get(i).getPrecipitation() > maxPrec)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	// Shorten the ideal range for the population.
+	public static void updateRange()
+	{
+		minTemp += 1.0;
+		maxTemp -= 1.0;
+		minPrec += 2.0;
+		maxPrec -= 2.0;
 	}
 }

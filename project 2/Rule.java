@@ -22,6 +22,8 @@ public class Rule
 			a = ideal;
 		else if(level.equals("high"))
 			a = high;
+		else if(level == null)
+			a = 1.0;
 		
 		if(change.equals("decreasing"))
 			b = decreasing;
@@ -29,11 +31,15 @@ public class Rule
 			b = constant;
 		else if(change.equals("increasing"))
 			b = increasing;
+		else if(change == null)
+			b = 1.0;
 		
 		if(activity.equals("resting"))
 			c = resting;
 		else if(activity.equals("present"))
 			c = present;
+		else if(activity == null)
+			c = 1.0;
 		
 		result = findMin(a, b, c);
 	}

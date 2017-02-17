@@ -4,7 +4,7 @@ import org.junit.Test;
 public class RuleTest
 {
 	@Test
-	public void testConstructor()
+	public void testRule()
 	{
 		Rule rule = new Rule("low", "constant", "resting", "sugar");
 		
@@ -12,6 +12,13 @@ public class RuleTest
 		assertTrue(rule.change.equals("constant"));
 		assertTrue(rule.activity.equals("resting"));
 		assertTrue(rule.output.equals("sugar"));
+		
+		Rule rule2 = new Rule("low", null, null, "sugar");
+		
+		assertTrue(rule2.level.equals("low"));
+		assertTrue(rule2.change == null);
+		assertTrue(rule2.activity == null);
+		assertTrue(rule2.output.equals("sugar"));
 	}
 	
 	@Test
@@ -39,6 +46,12 @@ public class RuleTest
 		rule.calcResult(0.1, 0.9, 0.0, 0.35, 0.65, 0.0, 1.0, 0.0);
 
 		assertTrue(rule.getResult() == 0.1);
+		
+		Rule rule2 = new Rule("low", null, null, "sugar");
+		
+		rule.calcResult(0.4, 0.6, 0.0, 0.3, 0.7, 0.0, 1.0, 0.0);
+		
+		assertTrue(rule.getResult() == 0.4);
 	}
 	
 	@Test

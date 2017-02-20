@@ -16,32 +16,26 @@ public class Rule
 	{
 		double a = 0.0, b = 0.0, c = 0.0;
 		
-		if(level.equals("low"))
+		if(level==("low"))
 			a = low;
-		else if(level.equals("ideal"))
+		else if(level==("ideal"))
 			a = ideal;
-		else if(level.equals("high"))
+		else if(level==("high"))
 			a = high;
-		else if(level == null)
-			a = 1.0;
 		
-		if(change.equals("decreasing"))
+		if(change==("decreasing"))
 			b = decreasing;
-		else if(change.equals("constant"))
+		else if(change==("constant"))
 			b = constant;
-		else if(change.equals("increasing"))
+		else if(change==("increasing"))
 			b = increasing;
-		else if(change == null)
-			b = 1.0;
 		
-		if(activity.equals("resting"))
+		if(activity==("resting"))
 			c = resting;
-		else if(activity.equals("present"))
+		else if(activity==("present"))
 			c = present;
-		else if(activity == null)
-			c = 1.0;
 		
-		result = findMin(a, b, c);
+		result = findMin(a, b, c);		
 	}
 	
 	// Find the minimum of a, b, and c.

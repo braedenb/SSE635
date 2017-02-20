@@ -15,7 +15,7 @@ public class FuzzyTest
 		assertTrue(Fuzzy.rules.size() == 47);
 	}
 	
-	@Test
+	/*@Test
 	public void testUserInput()
 	{
 		Fuzzy.userInput();
@@ -23,7 +23,7 @@ public class FuzzyTest
 		assertTrue(Fuzzy.glucose == 75.0);
 		assertTrue(Fuzzy.rate == -0.5);
 		assertTrue(Fuzzy.activity == "present");
-	}
+	}*/
 	
 	@Test
 	public void testCalcLow()
@@ -168,4 +168,22 @@ public class FuzzyTest
 		Fuzzy.calcPresent();
 		assertTrue(Fuzzy.present == 0);
 	}
+	@Test
+	public void testCalcInterval()
+	{
+		Fuzzy.populateRules();
+		Fuzzy.userInput();
+		Fuzzy.calcIntervals();
+		assertTrue(Fuzzy.output == -100);
+	}
+	@Test 
+	public void testInterpret()
+	{
+		Fuzzy.populateRules();
+		Fuzzy.userInput();
+		Fuzzy.calcIntervals();
+		assertTrue(Fuzzy.interpret() == "Add sugar");
+	}
+	
+	
 }

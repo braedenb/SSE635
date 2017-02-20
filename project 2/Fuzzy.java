@@ -3,14 +3,14 @@ import java.util.Scanner;
 
 public class Fuzzy
 {
-	static ArrayList<Rule> rules;
+	static ArrayList<Rule> rules =new ArrayList<Rule>();
 	static double glucose, rate;
 	static String activity;
-	static double low, ideal, high, decreasing, constant, increasing, resting, present;
+	static double low, ideal, high, decreasing, constant, increasing, resting, present, output, insulin=0, sugar=0, nothing=0;
 	
 	public static void main(String[] args)
 	{
-		rules = new ArrayList<Rule>();
+		//rules = new ArrayList<Rule>();
 		
 		// Populate rules with all 47 rule combinations.
 		populateRules();
@@ -26,7 +26,10 @@ public class Fuzzy
 		calcConstant();
 		calcIncreasing();
 		calcResting();
-		calcPresent();
+		calcPresent();		
+		calcIntervals();
+		System.out.println("\nOutput= " + output);
+		System.out.println("Recommended action: " + interpret());
 	}
 	
 	// Populate rules with all 47 rule combinations.
@@ -85,19 +88,15 @@ public class Fuzzy
 	public static void userInput()
 	{
 		Scanner in = new Scanner(System.in);
-		
 		System.out.print("Input current glucose level (mg/dL): ");
 		glucose = in.nextDouble();
-		
 		System.out.print("Input rate of change of glucose (mg/dL/min): ");
 		rate = in.nextDouble();
-		
 		System.out.print("Is activity present (y or n)? ");
 		String response = in.next();
-		
-		if(response.equalsIgnoreCase("y"))
+		if(response==("y"))
 			activity = "present";
-		else if(response.equalsIgnoreCase("n"))
+		else if(response==("n"))
 			activity = "resting";
 	}
 	
@@ -169,7 +168,7 @@ public class Fuzzy
 	// Calculate the resting membership.
 	public static void calcResting()
 	{
-		if(activity.equals("resting"))
+		if(activity==("resting"))
 			resting = 1;
 		else
 			resting = 0;
@@ -178,9 +177,54 @@ public class Fuzzy
 	// Calculate the present membership.
 	public static void calcPresent()
 	{
-		if(activity.equals("present"))
+		if(activity==("present"))
 			present = 1;
 		else
 			present = 0;
+	}
+	//calculates all memberships
+	public static void calcMembership()
+	{
+		calcLow();
+		calcIdeal();
+		calcHigh();
+		calcDecreasing();
+		calcConstant();
+		calcIncreasing();
+		calcResting();
+		calcPresent();
+	}
+	
+	//determining the output levels of membership
+	public static void calcIntervals()
+	{
+		calcMembership();
+		for(int i=0; i< rules.size(); i++)
+		{
+			rules.get(i).calcResult( low,  ideal,  high,  decreasing,  constant,  increasing,  resting,  present);
+			//sugar/insulin/nothing = sum of respective squares
+			if( rules.get(i).getOutput() == "sugar")
+				sugar +=Math.pow(rules.get(i).getResult(), 2); 
+			else if (rules.get(i).getOutput() == "insulin")
+				insulin += Math.pow(rules.get(i).getResult(), 2);
+			else
+				nothing += Math.pow(rules.get(i).getResult(),2);
+		}
+		sugar = Math.sqrt(sugar);
+		insulin = Math.sqrt(insulin);
+		nothing = Math.sqrt(nothing);
+		if(sugar + nothing + insulin != 0)			
+			output = ((-100 * sugar) +  (0*nothing) + (100*insulin))/(sugar + nothing + insulin);
+		else
+			output = 0;
+	}
+	public static String interpret()
+	{
+		if(output > 0)
+			return "Add insulin";
+		if (output < 0)
+			return "Add sugar";
+		else
+			return "Do nothing";
 	}
 }
